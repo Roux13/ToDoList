@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/task_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="85dp"
+    android:animateLayoutChanges="?android:attr/windowOverscan">
+
+    <CheckBox
+        android:id="@+id/is_done_chkbx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLength="25"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="@string/description_description_description_description"
+        android:textColor="@color/colorTextSecondary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_created_tv"
+        app:layout_constraintStart_toStartOf="@+id/item_task_name_tv" />
+
+    <TextView
+        android:id="@+id/item_task_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/task_name"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/is_done_chkbx"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_created_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/sample_date"
+        android:textColor="@color/colorTextSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_edit_btn" />
+
+    <Button
+        android:id="@+id/item_edit_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_edit_item"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

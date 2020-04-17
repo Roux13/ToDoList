@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/task_editor_appbar"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/show_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/task_title_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:gravity="center_horizontal"
+            android:text="@string/task_title"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/desc_text_info"
+            app:layout_constraintTop_toBottomOf="@+id/desc_text_info">
+
+            <TextView
+                android:id="@+id/task_description_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:text="@string/description_description_description_description"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="14sp" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/task_created_tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sample_date"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/created_text_info"
+            app:layout_constraintTop_toBottomOf="@+id/created_text_info" />
+
+
+        <TextView
+            android:id="@+id/task_closed_tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sample_date"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/done_text_info"
+            app:layout_constraintTop_toBottomOf="@+id/done_text_info" />
+
+        <TextView
+            android:id="@+id/done_text_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/done_title"
+            android:textColor="@color/colorTextPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/created_text_info"
+            app:layout_constraintTop_toTopOf="@+id/created_text_info" />
+
+        <TextView
+            android:id="@+id/created_text_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/created_title"
+            android:textColor="@color/colorTextPrimary"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+        <TextView
+            android:id="@+id/desc_text_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/description_title"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/task_title_info" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+
+    <string name="back">Back</string>
+    <string name="do_task">Do</string>
+    <string name="delete_task">Delete</string>
+    <string name="save_task">Save</string>
+    <string name="edit_task">Edit</string>
+
+    <string name="description">Description</string>
+    <string name="description_with_colon">Description:</string>
+    <string name="title">Title</string>
+    <string name="delete_all">Delete All</string>
+    <string name="task_title">Task Title</string>
+    <string name="description_description_description_description">Description description description description</string>
+    <string name="sample_date">11-11-2020</string>
+    <string name="done_title">Done:</string>
+    <string name="created_title">Created:</string>
+    <string name="description_title">Description:</string>
+    <string name="delete_all_are_you_sure">Delete all tasks. Are you sure?</string>
+    <string name="delete_task_are_you_sure">Delete this task. Are you sure?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="done">Do</string>
+    <string name="edit">Edit</string>
+    <string name="task_name">Task name</string>
+</resources>
