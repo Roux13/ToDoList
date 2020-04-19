@@ -9,6 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        
+        <provider
+            android:authorities="ru.nehodov.todolist"
+            android:name=".stores.StoreContentProvider"/>
+        
         <activity android:name=".HostActivity"
             android:parentActivityName=".HostActivity">
             <intent-filter>

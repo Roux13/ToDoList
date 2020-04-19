@@ -1,6 +1,7 @@
 package ru.nehodov.todolist.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 import ru.nehodov.todolist.R;
 import ru.nehodov.todolist.models.Task;
+import ru.nehodov.todolist.stores.StoreContentProvider;
 import ru.nehodov.todolist.utils.DateTimeFormatter;
 
 public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksDialog.ConfirmAllDeleteDialogListener {
@@ -75,6 +77,13 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
         fab.setOnClickListener(this::onFabClick);
 
         updateUI();
+
+        try (Cursor cursor = this.getActivity().getContentResolver()
+                .query(StoreContentProvider.CONTENT_URI, new String[]{"NAME"}, "0", null, null, null)) {
+            while (cursor.moveToNext()) {
+                Log.d("ContentProvider", cursor.getString(1));
+            }
+        }
         return view;
     }
 
