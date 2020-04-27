@@ -268,8 +268,6 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
                 DialogFragment dialog = new ConfirmDeleteAllTasksDialog();
                 dialog.show(getFragmentManager(), "confirm_dialog");
                 return true;
-//            case R.id.search_task_list_menu:
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

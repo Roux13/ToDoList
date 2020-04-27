@@ -11,15 +11,17 @@ public interface IStore extends Serializable {
 
     ArrayList<Task> getTasks();
 
-    Task getTask(int id);
+    Task getTask(int taskId);
 
     void addTask(Task newTask);
 
-    void replaceTask(Task task, int id);
+    void replaceTask(Task task, int taskId);
 
-    void deleteTask(int id);
+    void deleteTask(int taskId);
 
     void deleteAll();
+
+    void doTask(int taskId);
 
     List<Task> searchTasks(String query);
 

@@ -82,13 +82,22 @@ public class SqlTaskStore implements IStore {
     @Override
     public void deleteTask(int taskId) {
         db.delete(TaskDbContract.TasksTable.TABLE_NAME,
-                TaskDbContract.TasksTable.COLUMN_NAME_ID + " = ?", new String[]{ String.valueOf(taskId)
+                TaskDbContract.TasksTable.COLUMN_NAME_ID + " = ?",
+                new String[]{ String.valueOf(taskId)
                 });
     }
 
     @Override
     public void deleteAll() {
-        db.delete(TaskDbContract.TasksTable.TABLE_NAME, null, null);
+        db.delete(TaskDbContract.TasksTable.TABLE_NAME,
+                null, null);
+    }
+
+    @Override
+    public void doTask(int taskId) {
+        Task task = getTask(taskId);
+        task.doTask();
+        replaceTask(task, task.getId());
     }
 
     @Override

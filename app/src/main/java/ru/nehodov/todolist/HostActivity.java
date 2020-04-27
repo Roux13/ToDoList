@@ -74,11 +74,11 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
 
     @Override
     public void doTask(int taskId) {
-        Task task = taskStore.getTask(taskId);
-        task.doTask();
+        taskStore.doTask(taskId);
         Bundle args = new Bundle();
-        args.putSerializable(TaskListFragment.TASK_KEY, task);
+        args.putSerializable(TaskListFragment.TASK_KEY, taskStore.getTask(taskId));
         args.putInt(TaskListFragment.TASK_ID_KEY, taskId);
+        getSupportFragmentManager().popBackStack();
         callTaskInfo(args);
     }
 

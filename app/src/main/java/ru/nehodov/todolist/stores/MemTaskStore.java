@@ -73,6 +73,11 @@ public class MemTaskStore implements IStore {
     }
 
     @Override
+    public void doTask(int taskId) {
+        getTask(taskId).doTask();
+    }
+
+    @Override
     public List<Task> searchTasks(String query) {
         List<Task> result = new ArrayList<>();
         for (Task task : tasks.values()) {
