@@ -14,10 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import ru.nehodov.todolist.R;
 import ru.nehodov.todolist.models.Task;
+import ru.nehodov.todolist.utils.DateTimeFormatter;
 
 public class TaskEditorFragment extends Fragment {
 
@@ -26,7 +27,7 @@ public class TaskEditorFragment extends Fragment {
 
     private TaskEditorListener listener;
 
-    private int taskIndex;
+    private int taskId;
     private Task task;
     private EditText taskTittleEdit;
     private EditText taskDescriptionEdit;
@@ -57,12 +58,12 @@ public class TaskEditorFragment extends Fragment {
         toolbar.setNavigationOnClickListener(this::onNavigationButtonClick);
         toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
-        taskIndex = getArguments().getInt(TaskListFragment.TASK_INDEX_KEY);
+        taskId = getArguments().getInt(TaskListFragment.TASK_ID_KEY);
 
         taskTittleEdit = view.findViewById(R.id.task_title_edit);
         taskDescriptionEdit = view.findViewById(R.id.task_description_edit);
 
-        if (taskIndex > NEW_TASK_INDEX) {
+        if (taskId > NEW_TASK_INDEX) {
             task = (Task) getArguments().getSerializable(TRANSFERRED_TASK_KEY);
             taskTittleEdit.setText(task.getName());
             taskDescriptionEdit.setText(task.getDesc());
@@ -74,21 +75,22 @@ public class TaskEditorFragment extends Fragment {
         String taskName = taskTittleEdit.getText().toString();
         taskName = taskName.equals("") ? "New Task" : taskName;
         String taskDescription = taskDescriptionEdit.getText().toString();
-        Calendar created = Calendar.getInstance();
-        task = new Task(taskName, taskDescription, created);
+        String created = DateTimeFormatter.format(new Date());
+
+        task = new Task(taskName, taskDescription, created, "");
         listener.addNewTask(task);
     }
 
     private void editTask() {
         task.setName(taskTittleEdit.getText().toString());
         task.setDesc(taskDescriptionEdit.getText().toString());
-        listener.editTask(task, taskIndex);
+        listener.editTask(task, taskId);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save_edit_menu) {
-            if (taskIndex > NEW_TASK_INDEX) {
+            if (taskId > NEW_TASK_INDEX) {
                 editTask();
             } else {
                 createTask();

@@ -17,7 +17,7 @@ public class StoreContentProvider extends ContentProvider {
 
     public static final Uri CONTENT_URI = Uri.parse("content://ru.nehodov.todolist/tasks");
 
-    private final TaskStore store = TaskStore.getInstance();
+    private final IStore store = MemTaskStore.getInstance();
 
     @Override
     public boolean onCreate() {
@@ -26,7 +26,11 @@ public class StoreContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(@NonNull Uri uri,
+                        @Nullable String[] projection,
+                        @Nullable String selection,
+                        @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
         Cursor cursor;
         if (TextUtils.isEmpty(selection)) {
             cursor = new TaskStoreCursor(store.getTasks());

@@ -17,13 +17,12 @@ import android.widget.TextView;
 
 import ru.nehodov.todolist.R;
 import ru.nehodov.todolist.models.Task;
-import ru.nehodov.todolist.utils.DateTimeFormatter;
 
 public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialog.ConfirmDeleteTaskDialogListener {
 
     private TaskInfoListener listener;
 
-    private int taskIndex;
+    private int taskId;
     private Task task;
 
     public TaskInfoFragment() {
@@ -58,14 +57,14 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
         TextView createdTv = view.findViewById(R.id.task_created_tv_info);
         TextView closedTv = view.findViewById(R.id.task_closed_tv_info);
 
-        taskIndex = getArguments().getInt(TaskListFragment.TASK_INDEX_KEY);
+        taskId = getArguments().getInt(TaskListFragment.TASK_ID_KEY);
         task = (Task) getArguments().getSerializable(TaskListFragment.TASK_KEY);
 
         tittleTv.setText(task.getName());
         descriptionTv.setText(task.getDesc());
-        createdTv.setText(DateTimeFormatter.format(task.getCreated().getTime()));
-        if (task.getDoneDate() != null) {
-            closedTv.setText(DateTimeFormatter.format(task.getDoneDate().getTime()));
+        createdTv.setText(task.getCreated());
+        if (!task.getDoneDate().equals("")) {
+            closedTv.setText(task.getDoneDate());
             toolbar.getMenu().findItem(R.id.done_info_menu).setEnabled(false).setVisible(false);
         } else {
             closedTv.setText("");
@@ -80,11 +79,11 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.edit_info_menu:
-                args.putInt(TaskListFragment.TASK_INDEX_KEY, taskIndex);
+                args.putInt(TaskListFragment.TASK_ID_KEY, taskId);
                 listener.callTaskEditor(args);
                 return true;
             case R.id.done_info_menu:
-                listener.doTask(taskIndex);
+                listener.doTask(taskId);
                 return true;
             case R.id.delete_info_menu:
                 DialogFragment dialog = new ConfirmDeleteTaskDialog();
@@ -101,16 +100,16 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
 
     @Override
     public void confirmDeleteTask() {
-        listener.deleteTask(taskIndex);
+        listener.deleteTask(taskId);
     }
 
     public interface TaskInfoListener {
 
         void callTaskEditor(Bundle args);
 
-        void doTask(int index);
+        void doTask(int taskId);
 
-        void deleteTask(int index);
+        void deleteTask(int taskId);
     }
 
     @Override

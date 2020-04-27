@@ -6,16 +6,22 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
+import java.util.List;
+
 import ru.nehodov.todolist.fragments.TaskEditorFragment;
 import ru.nehodov.todolist.fragments.TaskInfoFragment;
 import ru.nehodov.todolist.fragments.TaskListFragment;
 import ru.nehodov.todolist.models.Task;
-import ru.nehodov.todolist.stores.TaskStore;
+import ru.nehodov.todolist.stores.IStore;
+import ru.nehodov.todolist.stores.MemTaskStore;
+import ru.nehodov.todolist.stores.SqlTaskStore;
+import ru.nehodov.todolist.stores.TaskDbHelper;
 
 public class HostActivity extends AppCompatActivity implements TaskListFragment.TaskListListener,
         TaskEditorFragment.TaskEditorListener, TaskInfoFragment.TaskInfoListener {
 
-    private final TaskStore taskStore = TaskStore.getInstance();
+    private TaskDbHelper dbHelper;
+    private IStore taskStore;
 
     private FragmentManager fm = getSupportFragmentManager();
 
@@ -23,24 +29,26 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_activity);
+        dbHelper = new TaskDbHelper(this);
+        // Раскомментировать, если нужна версия с SQLiteTaskStore
+        taskStore = new SqlTaskStore(dbHelper.getWritableDatabase());
+        // Раскомментировать, если нужна версия с MemTaskStore
+//        taskStore = MemTaskStore.getInstance();
 
-        Bundle args = new Bundle();
-        args.putSerializable(TaskListFragment.TASK_STORE_KEY, taskStore.getTasks());
         if (fm.findFragmentById(R.id.activity_host) == null) {
             fm.beginTransaction()
-                    .add(R.id.activity_host, TaskListFragment.getInstance(args))
+                    .add(R.id.activity_host, TaskListFragment.getInstance(new Bundle()))
                     .commit();
         }
     }
 
-
     @Override
     public void callTaskEditor(Bundle args) {
-        int indexOfTask = args.getInt(TaskListFragment.TASK_INDEX_KEY);
-        if (indexOfTask > TaskEditorFragment.NEW_TASK_INDEX) {
+        int taskId = args.getInt(TaskListFragment.TASK_ID_KEY);
+        if (taskId > TaskEditorFragment.NEW_TASK_INDEX) {
             args.putSerializable(
                     TaskEditorFragment.TRANSFERRED_TASK_KEY,
-                    taskStore.getTask(indexOfTask)
+                    taskStore.getTask(taskId)
             );
         }
         this.replaceFragment(TaskEditorFragment.getInstance(args));
@@ -51,6 +59,10 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
         this.replaceFragment(TaskInfoFragment.getInstance(args));
     }
 
+    @Override
+    public List<Task> searchTasks(String searchQuery) {
+        return taskStore.searchTasks(searchQuery);
+    }
 
     @Override
     public void addNewTask(Task task) {
@@ -61,18 +73,18 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
     }
 
     @Override
-    public void doTask(int index) {
-        Task task = taskStore.getTask(index);
+    public void doTask(int taskId) {
+        Task task = taskStore.getTask(taskId);
         task.doTask();
         Bundle args = new Bundle();
         args.putSerializable(TaskListFragment.TASK_KEY, task);
-        args.putInt(TaskListFragment.TASK_INDEX_KEY, index);
+        args.putInt(TaskListFragment.TASK_ID_KEY, taskId);
         callTaskInfo(args);
     }
 
     @Override
-    public void deleteTask(int index) {
-        taskStore.deleteTask(index);
+    public void deleteTask(int taskId) {
+        taskStore.deleteTask(taskId);
         Bundle args = new Bundle();
         args.putSerializable(TaskListFragment.TASK_STORE_KEY, taskStore.getTasks());
         replaceFragment(TaskListFragment.getInstance(args));
@@ -81,15 +93,22 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     public void deleteAll() {
         taskStore.deleteAll();
-        replaceFragment(TaskListFragment.getInstance(new Bundle()));
-    }
-
-    @Override
-    public void editTask(Task task, int index) {
-        taskStore.replaceTask(task, index);
         Bundle args = new Bundle();
         args.putSerializable(TaskListFragment.TASK_STORE_KEY, taskStore.getTasks());
         replaceFragment(TaskListFragment.getInstance(args));
+    }
+
+    @Override
+    public void editTask(Task task, int id) {
+        taskStore.replaceTask(task, id);
+        Bundle args = new Bundle();
+        args.putSerializable(TaskListFragment.TASK_STORE_KEY, taskStore.getTasks());
+        replaceFragment(TaskListFragment.getInstance(args));
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return taskStore.getTasks();
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -98,4 +117,5 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
                 .replace(R.id.activity_host, fragment)
                 .commit();
     }
+
 }

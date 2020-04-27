@@ -1,20 +1,35 @@
 package ru.nehodov.todolist.models;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
+
+import ru.nehodov.todolist.utils.DateTimeFormatter;
 
 public class Task implements Serializable {
 
+    private int id;
     private String name;
     private String desc;
-    private Calendar created;
-    private Calendar done;
+    private String created;
+    private String done;
 
-    public Task(String name, String desc, Calendar created) {
+    public Task(String name, String desc, String created, String done) {
         this.name = name;
         this.desc = desc;
         this.created = created;
-        this.done = null;
+        this.done = done;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Task(String name, String desc, String created) {
+        this(name, desc, created, "");
     }
 
     public void setName(String name) {
@@ -33,15 +48,17 @@ public class Task implements Serializable {
         return desc;
     }
 
-    public Calendar getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public Calendar getDoneDate() {
+    public String getDoneDate() {
         return done;
     }
 
     public void doTask() {
-        this.done = Calendar.getInstance();
+        this.done = DateTimeFormatter.format(new Date());
     }
+
+
 }
