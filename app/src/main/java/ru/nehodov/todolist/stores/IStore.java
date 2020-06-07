@@ -9,19 +9,17 @@ import ru.nehodov.todolist.models.Task;
 public interface IStore extends Serializable {
 
 
-    ArrayList<Task> getTasks();
+    void addTask(Task newTask);
 
     Task getTask(int taskId);
 
-    void addTask(Task newTask);
+    ArrayList<Task> getTasks();
 
     void replaceTask(Task task, int taskId);
 
     void deleteTask(int taskId);
 
     void deleteAll();
-
-    void doTask(int taskId);
 
     List<Task> searchTasks(String query);
 
