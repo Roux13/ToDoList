@@ -20,16 +20,19 @@ import ru.nehodov.todolist.models.Task;
 
 public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialog.ConfirmDeleteTaskDialogListener {
 
+    static final String ARGUMENT_TASK = "ARGUMENT_TASK";
+
     private TaskInfoListener listener;
 
-    private int taskId;
     private Task task;
 
     public TaskInfoFragment() {
     }
 
-    public static Fragment getInstance(Bundle args) {
+    public static Fragment getInstance(Task task) {
         Fragment fragment = new TaskInfoFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARGUMENT_TASK, task);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,8 +60,7 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
         TextView createdTv = view.findViewById(R.id.task_created_tv_info);
         TextView closedTv = view.findViewById(R.id.task_closed_tv_info);
 
-        taskId = getArguments().getInt(TaskListFragment.TASK_ID_KEY);
-        task = (Task) getArguments().getSerializable(TaskListFragment.TASK_KEY);
+        task = (Task) requireArguments().getSerializable(ARGUMENT_TASK);
 
         tittleTv.setText(task.getName());
         descriptionTv.setText(task.getDesc());
@@ -75,19 +77,17 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Bundle args = new Bundle();
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.edit_info_menu:
-                args.putInt(TaskListFragment.TASK_ID_KEY, taskId);
-                listener.callTaskEditor(args);
+                listener.callTaskEditor(task);
                 return true;
             case R.id.done_info_menu:
-                listener.doTask(taskId);
+                listener.doTask(task);
                 return true;
             case R.id.delete_info_menu:
                 DialogFragment dialog = new ConfirmDeleteTaskDialog();
-                dialog.show(getFragmentManager(), "confirm_delete_task_dialog");
+                dialog.show(getParentFragmentManager(), "confirm_delete_task_dialog");
                 return true;
             default:
             return super.onOptionsItemSelected(item);
@@ -95,21 +95,23 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
     }
 
     public void onNavigationButtonClick(View view) {
-        getActivity().onBackPressed();
+        listener.callTaskList();
     }
 
     @Override
     public void confirmDeleteTask() {
-        listener.deleteTask(taskId);
+        listener.deleteTask(task);
     }
 
     public interface TaskInfoListener {
 
-        void callTaskEditor(Bundle args);
+        void callTaskEditor(Task task);
 
-        void doTask(int taskId);
+        void callTaskList();
 
-        void deleteTask(int taskId);
+        void doTask(Task task);
+
+        void deleteTask(Task task);
     }
 
     @Override

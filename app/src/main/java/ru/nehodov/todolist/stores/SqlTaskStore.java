@@ -26,18 +26,13 @@ public class SqlTaskStore implements IStore {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>();
-        try (Cursor cursor = db.query(TaskDbContract.TasksTable.TABLE_NAME,
-                null, null, null,
-                null, null, null)){
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                result.add(makeTaskFromCursor(cursor));
-                cursor.moveToNext();
-            }
-        }
-        return result;
+    public void addTask(Task newTask) {
+        ContentValues values = new ContentValues();
+        values.put(TaskDbContract.TasksTable.COLUMN_NAME_NAME, newTask.getName());
+        values.put(TaskDbContract.TasksTable.COLUMN_NAME_DESC, newTask.getDesc());
+        values.put(TaskDbContract.TasksTable.COLUMN_NAME_CREATED, newTask.getCreated());
+        values.put(TaskDbContract.TasksTable.COLUMN_NAME_DONE, newTask.getDoneDate());
+        db.insert(TaskDbContract.TasksTable.TABLE_NAME, null, values);
     }
 
     @Override
@@ -58,13 +53,18 @@ public class SqlTaskStore implements IStore {
     }
 
     @Override
-    public void addTask(Task newTask) {
-        ContentValues values = new ContentValues();
-        values.put(TaskDbContract.TasksTable.COLUMN_NAME_NAME, newTask.getName());
-        values.put(TaskDbContract.TasksTable.COLUMN_NAME_DESC, newTask.getDesc());
-        values.put(TaskDbContract.TasksTable.COLUMN_NAME_CREATED, newTask.getCreated());
-        values.put(TaskDbContract.TasksTable.COLUMN_NAME_DONE, newTask.getDoneDate());
-        db.insert(TaskDbContract.TasksTable.TABLE_NAME, null, values);
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> result = new ArrayList<>();
+        try (Cursor cursor = db.query(TaskDbContract.TasksTable.TABLE_NAME,
+                null, null, null,
+                null, null, null)){
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                result.add(makeTaskFromCursor(cursor));
+                cursor.moveToNext();
+            }
+        }
+        return result;
     }
 
     @Override
@@ -91,13 +91,6 @@ public class SqlTaskStore implements IStore {
     public void deleteAll() {
         db.delete(TaskDbContract.TasksTable.TABLE_NAME,
                 null, null);
-    }
-
-    @Override
-    public void doTask(int taskId) {
-        Task task = getTask(taskId);
-        task.doTask();
-        replaceTask(task, task.getId());
     }
 
     @Override

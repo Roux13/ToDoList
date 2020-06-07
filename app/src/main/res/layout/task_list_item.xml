@@ -18,15 +18,18 @@
 
     <TextView
         android:id="@+id/item_desc"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:maxLength="25"
-        android:singleLine="true"
         android:ellipsize="end"
+
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:text="@string/description_description_description_description"
         android:textColor="@color/colorTextSecondary"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/item_created_tv"
+        app:layout_constraintEnd_toStartOf="@+id/item_created_tv"
         app:layout_constraintStart_toStartOf="@+id/item_task_name_tv" />
 
     <TextView

@@ -40,9 +40,9 @@ public class MemTaskStore implements IStore {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>(tasks.values());
-        return result;
+    public void addTask(Task newTask) {
+        newTask.setId(id++);
+        this.tasks.put(newTask.getId(), newTask);
     }
 
     @Override
@@ -51,9 +51,9 @@ public class MemTaskStore implements IStore {
     }
 
     @Override
-    public void addTask(Task newTask) {
-        newTask.setId(id++);
-        this.tasks.put(newTask.getId(), newTask);
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> result = new ArrayList<>(tasks.values());
+        return result;
     }
 
     @Override
@@ -70,11 +70,6 @@ public class MemTaskStore implements IStore {
     @Override
     public void deleteAll() {
         tasks.clear();
-    }
-
-    @Override
-    public void doTask(int taskId) {
-        getTask(taskId).doTask();
     }
 
     @Override

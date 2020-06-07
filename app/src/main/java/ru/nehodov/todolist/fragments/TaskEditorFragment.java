@@ -23,11 +23,10 @@ import ru.nehodov.todolist.utils.DateTimeFormatter;
 public class TaskEditorFragment extends Fragment {
 
     public static final int NEW_TASK_INDEX = -1;
-    public static final String TRANSFERRED_TASK_KEY = "transferred_task_key";
+    static final String ARGUMENT_TASK = "ARGUMENT_TASK";
 
     private TaskEditorListener listener;
 
-    private int taskId;
     private Task task;
     private EditText taskTittleEdit;
     private EditText taskDescriptionEdit;
@@ -35,8 +34,10 @@ public class TaskEditorFragment extends Fragment {
     public TaskEditorFragment() {
     }
 
-    public static Fragment getInstance(Bundle args) {
+    public static Fragment getInstance(Task task) {
         Fragment fragment = new TaskEditorFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARGUMENT_TASK, task);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,16 +59,15 @@ public class TaskEditorFragment extends Fragment {
         toolbar.setNavigationOnClickListener(this::onNavigationButtonClick);
         toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
-        taskId = getArguments().getInt(TaskListFragment.TASK_ID_KEY);
-
         taskTittleEdit = view.findViewById(R.id.task_title_edit);
         taskDescriptionEdit = view.findViewById(R.id.task_description_edit);
 
-        if (taskId > NEW_TASK_INDEX) {
-            task = (Task) getArguments().getSerializable(TRANSFERRED_TASK_KEY);
+        task = (Task) requireArguments().getSerializable(ARGUMENT_TASK);
+
+//        if (task.getId() > NEW_TASK_INDEX) {
             taskTittleEdit.setText(task.getName());
             taskDescriptionEdit.setText(task.getDesc());
-        }
+//        }
         return view;
     }
 
@@ -78,19 +78,19 @@ public class TaskEditorFragment extends Fragment {
         String created = DateTimeFormatter.format(new Date());
 
         task = new Task(taskName, taskDescription, created, "");
-        listener.addNewTask(task);
+        listener.addTask(task);
     }
 
     private void editTask() {
         task.setName(taskTittleEdit.getText().toString());
         task.setDesc(taskDescriptionEdit.getText().toString());
-        listener.editTask(task, taskId);
+        listener.editTask(task, task.getId());
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save_edit_menu) {
-            if (taskId > NEW_TASK_INDEX) {
+            if (task.getId() > NEW_TASK_INDEX) {
                 editTask();
             } else {
                 createTask();
@@ -100,11 +100,11 @@ public class TaskEditorFragment extends Fragment {
     }
 
     public void onNavigationButtonClick(View view) {
-        getActivity().onBackPressed();
+        requireActivity().onBackPressed();
     }
 
     public interface TaskEditorListener {
-        void addNewTask(Task task);
+        void addTask(Task task);
 
         void editTask(Task task, int index);
     }

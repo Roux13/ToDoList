@@ -31,13 +31,11 @@ import java.util.List;
 
 import ru.nehodov.todolist.R;
 import ru.nehodov.todolist.models.Task;
-import ru.nehodov.todolist.stores.StoreContentProvider;
 
 public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksDialog.ConfirmAllDeleteDialogListener {
 
-    public static final String TASK_KEY = "current_task";
-    public static final String TASK_ID_KEY = "task_index_key";
-    public static final String TASK_STORE_KEY = "task_store_key";
+    public static final String ARGUMENT_ALL_TASKS = "ARGUMENT_ALL_TASKS";
+    public static final int NEW_TASK_INDEX = -1;
 
     private List<Task> tasks;
 
@@ -48,8 +46,10 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
     public TaskListFragment() {
     }
 
-    public static Fragment getInstance(Bundle args) {
+    public static Fragment getInstance(ArrayList<Task> allTasks) {
         Fragment fragment = new TaskListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARGUMENT_ALL_TASKS, allTasks);
         fragment.setArguments(args);
         return fragment;
     }
@@ -104,12 +104,6 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
         loadTasks();
         updateUI();
 
-        try (Cursor cursor = this.getActivity().getContentResolver()
-                .query(StoreContentProvider.CONTENT_URI, new String[]{"NAME"}, "0", null, null, null)) {
-            while (cursor.moveToNext()) {
-                Log.d("ContentProvider", cursor.getString(1));
-            }
-        }
         return view;
     }
 
@@ -122,13 +116,13 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
     }
 
     public void onFabClick(View view) {
-        callTaskEditor(TaskEditorFragment.NEW_TASK_INDEX);
+        Task task = new Task("", "", "");
+        task.setId(NEW_TASK_INDEX);
+        callTaskEditor(task);
     }
 
-    private void callTaskEditor(int taskId) {
-        Bundle args = new Bundle();
-        args.putInt(TASK_ID_KEY, taskId);
-        listener.callTaskEditor(args);
+    private void callTaskEditor(Task task) {
+        listener.callTaskEditor(task);
     }
 
     @Override
@@ -136,7 +130,7 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
         listener.deleteAll();
     }
 
-    private class ItemAdapter extends RecyclerView.Adapter {
+    private class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         private List<Task> tasks;
@@ -163,12 +157,9 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             final Task task = tasks.get(position);
-            Bundle args = new Bundle();
             holder.itemView.setBackgroundColor(getColor(position));
             holder.itemView.setOnClickListener(view -> {
-                args.putSerializable(TASK_KEY, task);
-                args.putInt(TASK_ID_KEY, task.getId());
-                listener.callTaskInfo(args);
+                listener.callTaskInfo(task);
             });
             isDoneChkbx = holder.itemView.findViewById(R.id.is_done_chkbx);
             taskNameTv = holder.itemView.findViewById(R.id.item_task_name_tv);
@@ -176,7 +167,7 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
             taskDateTv = holder.itemView.findViewById(R.id.item_created_tv);
             editBtn = holder.itemView.findViewById(R.id.item_edit_btn);
 
-            editBtn.setOnClickListener(view -> callTaskEditor(task.getId()));
+            editBtn.setOnClickListener(view -> callTaskEditor(task));
 
             isDoneChkbx.setClickable(false);
             taskNameTv.setText(task.getName());
@@ -196,14 +187,14 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
         private void markAsCompleted(Task task) {
             isDoneChkbx.setChecked(true);
             taskNameTv.setTextColor(
-                    getContext().getResources().getColor(R.color.colorTextDisabled)
+                    requireActivity().getResources().getColor(R.color.colorTextDisabled)
             );
             taskNameTv.setPaintFlags(TextPaint.STRIKE_THRU_TEXT_FLAG);
             taskDescTv.setTextColor(
-                    getContext().getResources().getColor(R.color.colorTextDisabled)
+                    requireActivity().getResources().getColor(R.color.colorTextDisabled)
             );
             taskDescTv.setPaintFlags(TextPaint.STRIKE_THRU_TEXT_FLAG);
-            taskDateTv.setTextColor(getContext()
+            taskDateTv.setTextColor(requireActivity()
                     .getResources()
                     .getColor(R.color.colorTextDisabled));
             taskDateTv.setPaintFlags(TextPaint.STRIKE_THRU_TEXT_FLAG);
@@ -227,9 +218,9 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
     }
 
     public interface TaskListListener {
-        void callTaskInfo(Bundle args);
+        void callTaskInfo(Task task);
 
-        void callTaskEditor(Bundle args);
+        void callTaskEditor(Task task);
 
         void deleteAll();
 
@@ -237,7 +228,7 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
 
         List<Task> searchTasks(String searchQuery);
 
-        void doTask(int index);
+        void doTask(Task task);
     }
 
     @Override
@@ -266,7 +257,7 @@ public class TaskListFragment extends Fragment implements ConfirmDeleteAllTasksD
         switch (itemId) {
             case R.id.delete_all_task_menu:
                 DialogFragment dialog = new ConfirmDeleteAllTasksDialog();
-                dialog.show(getFragmentManager(), "confirm_dialog");
+                dialog.show(getParentFragmentManager(), "confirm_dialog");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
