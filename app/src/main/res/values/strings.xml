@@ -27,4 +27,5 @@
     <string name="task_name">Task name</string>
     <string name="search">Search</string>
     <string name="search_hint">Search</string>
+    <string name="image">Image</string>
 </resources>

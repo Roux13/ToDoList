@@ -4,7 +4,9 @@
 
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/task_list_appbar"
@@ -24,7 +26,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/task_list_item"
+            />
 
     </androidx.core.widget.NestedScrollView>
 

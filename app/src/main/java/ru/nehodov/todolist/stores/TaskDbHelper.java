@@ -22,7 +22,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 + TaskDbContract.TasksTable.COLUMN_NAME_NAME + " TEXT, "
                 + TaskDbContract.TasksTable.COLUMN_NAME_DESC + " TEXT, "
                 + TaskDbContract.TasksTable.COLUMN_NAME_CREATED + " TEXT, "
-                + TaskDbContract.TasksTable.COLUMN_NAME_DONE + " TEXT DEFAULT NULL"
+                + TaskDbContract.TasksTable.COLUMN_NAME_DONE + " TEXT DEFAULT NULL, "
+                + TaskDbContract.TasksTable.COLUMN_NAME_PHOTO_PATH + " TEXT DEFAULT NULL"
                 + ");"
         );
     }

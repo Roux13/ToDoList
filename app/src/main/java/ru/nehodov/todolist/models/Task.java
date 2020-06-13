@@ -13,12 +13,14 @@ public class Task implements Serializable {
     private String desc;
     private String created;
     private String done;
+    private String photoPath;
 
     public Task(String name, String desc, String created, String done) {
         this.name = name;
         this.desc = desc;
         this.created = created;
         this.done = done;
+        this.photoPath = "";
     }
 
     public Task(int id, String name, String desc, String created, String done) {
@@ -27,6 +29,7 @@ public class Task implements Serializable {
         this.desc = desc;
         this.created = created;
         this.done = done;
+        this.photoPath = "";
     }
 
     public int getId() {
@@ -69,6 +72,14 @@ public class Task implements Serializable {
         this.done = DateTimeFormatter.format(new Date());
     }
 
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,11 +89,12 @@ public class Task implements Serializable {
                 Objects.equals(name, task.name) &&
                 Objects.equals(desc, task.desc) &&
                 Objects.equals(created, task.created) &&
-                Objects.equals(done, task.done);
+                Objects.equals(done, task.done) &&
+                Objects.equals(photoPath, task.photoPath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, desc, created, done);
+        return Objects.hash(id, name, desc, created, done, photoPath);
     }
 }

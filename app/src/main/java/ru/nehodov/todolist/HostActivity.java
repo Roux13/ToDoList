@@ -33,11 +33,11 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
         setContentView(R.layout.host_activity);
         dbHelper = new TaskDbHelper(this);
         // Раскомментировать, если нужна версия с SQLiteTaskStore
-//        taskStore = new SqlTaskStore(dbHelper.getWritableDatabase());
+        taskStore = new SqlTaskStore(dbHelper.getWritableDatabase());
         // Раскомментировать, если нужна версия с MemTaskStore
 //        taskStore = MemTaskStore.getInstance();
         // Раскомментировать, если нужна версия с FileStore
-        taskStore = FileStore.getInstance(getApplicationContext());
+//        taskStore = FileStore.getInstance(getApplicationContext());
 
         if (fm.findFragmentById(R.id.activity_host) == null) {
             fm.beginTransaction()

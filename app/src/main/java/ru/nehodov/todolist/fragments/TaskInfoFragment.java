@@ -1,6 +1,8 @@
 package ru.nehodov.todolist.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,10 +11,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.nehodov.todolist.R;
@@ -21,6 +25,7 @@ import ru.nehodov.todolist.models.Task;
 public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialog.ConfirmDeleteTaskDialogListener {
 
     static final String ARGUMENT_TASK = "ARGUMENT_TASK";
+    private static final String TAG = TaskInfoFragment.class.getSimpleName();
 
     private TaskInfoListener listener;
 
@@ -59,8 +64,17 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
         TextView descriptionTv = view.findViewById(R.id.task_description_info);
         TextView createdTv = view.findViewById(R.id.task_created_tv_info);
         TextView closedTv = view.findViewById(R.id.task_closed_tv_info);
+        ImageView photo = view.findViewById(R.id.photo);
 
         task = (Task) requireArguments().getSerializable(ARGUMENT_TASK);
+
+        if (task.getPhotoPath() != null && task.getPhotoPath() != null && !task.getPhotoPath().equals("")) {
+            Log.d(TAG, "PhotoPath of the task is " + task.getPhotoPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(task.getPhotoPath());
+            photo.setImageBitmap(bitmap);
+        } else {
+            Log.d(TAG, "PhotoPath of the task is empty");
+        }
 
         tittleTv.setText(task.getName());
         descriptionTv.setText(task.getDesc());

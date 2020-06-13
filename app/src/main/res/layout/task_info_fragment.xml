@@ -107,6 +107,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/task_title_info" />
 
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/task_created_tv_info"
+            android:src="@drawable/ic_add_photo_alternate"
+            tools:srcCompat="@drawable/ic_add_photo_alternate"
+            android:background="@color/colorTextDisabled"
+            android:padding="1dp"
+            android:contentDescription="@string/image" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
