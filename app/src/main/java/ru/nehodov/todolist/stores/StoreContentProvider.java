@@ -15,8 +15,6 @@ import ru.nehodov.todolist.models.Task;
 
 public class StoreContentProvider extends ContentProvider {
 
-    public static final Uri CONTENT_URI = Uri.parse("content://ru.nehodov.todolist/tasks");
-
     private final IStore store = MemTaskStore.getInstance();
 
     @Override
@@ -59,12 +57,17 @@ public class StoreContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(@NonNull Uri uri,
+                      @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         return 0;
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri,
+                      @Nullable ContentValues contentValues,
+                      @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         return 0;
     }
 }

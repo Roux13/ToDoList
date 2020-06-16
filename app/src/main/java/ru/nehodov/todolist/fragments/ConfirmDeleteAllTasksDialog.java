@@ -22,7 +22,7 @@ public class ConfirmDeleteAllTasksDialog extends DialogFragment {
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.delete_all_are_you_sure)
                 .setNegativeButton(R.string.cancel, this::onNegativeClick)
-                .setPositiveButton(R.string.ok, this::OnPositiveClick)
+                .setPositiveButton(R.string.ok, this::onPositiveClick)
                 .create();
     }
 
@@ -30,7 +30,7 @@ public class ConfirmDeleteAllTasksDialog extends DialogFragment {
         this.dismiss();
     }
 
-    public void OnPositiveClick(DialogInterface dialog, int i) {
+    public void onPositiveClick(DialogInterface dialog, int i) {
            listener.confirmDeleteAllTasks();
     }
 
@@ -42,7 +42,7 @@ public class ConfirmDeleteAllTasksDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            this.listener = (ConfirmAllDeleteDialogListener) getFragmentManager()
+            this.listener = (ConfirmAllDeleteDialogListener) getParentFragmentManager()
                     .findFragmentById(R.id.activity_host);
         } catch (ClassCastException e) {
             throw new ClassCastException(String.format("Class %s must implement %s interface",

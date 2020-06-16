@@ -6,12 +6,12 @@ import java.util.Locale;
 
 public class DateTimeFormatter {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
             "HH:mm dd-MM-yyyy", Locale.US
     );
 
     public static String format(Date date) {
-        return dateFormat.format(date);
+        return DATE_FORMAT.format(date);
     }
 
 }

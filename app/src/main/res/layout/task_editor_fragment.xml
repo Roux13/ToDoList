@@ -2,14 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/task_editing_dialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/task_editor_appbar"
-
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
@@ -17,7 +14,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/show_info_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_anchorGravity="center">
@@ -33,7 +29,6 @@
             android:autofillHints="@string/title"
             android:textColor="@color/colorTextPrimary"
             android:textSize="18sp"
-            android:defaultFocusHighlightEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -1,15 +1,19 @@
 package ru.nehodov.todolist.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -24,25 +28,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ru.nehodov.todolist.R;
 import ru.nehodov.todolist.models.Task;
 import ru.nehodov.todolist.utils.DateTimeFormatter;
+import ru.nehodov.todolist.utils.TaskUtils;
 
 import static android.app.Activity.RESULT_OK;
 
 public class TaskEditorFragment extends Fragment {
 
-    static final String TAG = TaskEditorFragment.class.getSimpleName();
-    private static final String EXTRA_CURRENT_PHOTO_PATH = "extra_current_photo_path";
     public static final int NEW_TASK_INDEX = -1;
-    static final String ARGUMENT_TASK = "ARGUMENT_TASK";
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private static final String TAG = TaskEditorFragment.class.getSimpleName();
+    private static final String EXTRA_CURRENT_PHOTO_PATH = "extra_current_photo_path";
+    private static final String ARGUMENT_TASK = "ARGUMENT_TASK";
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
+    private static final int PERMISSION_REQUEST_CODE = 99;
+    private static final String FILE_PROVIDER_AUTHORITY = "ru.nehodov.todolist.fileprovider";
 
     private TaskEditorListener listener;
 
@@ -51,10 +56,7 @@ public class TaskEditorFragment extends Fragment {
     private EditText taskDescriptionEdit;
     private ImageView photo;
 
-    String currentPhotoPath;
-
-    public TaskEditorFragment() {
-    }
+    private String currentPhotoPath;
 
     public static Fragment getInstance(Task task) {
         Fragment fragment = new TaskEditorFragment();
@@ -91,34 +93,52 @@ public class TaskEditorFragment extends Fragment {
 
         task = (Task) requireArguments().getSerializable(ARGUMENT_TASK);
 
-        if (task.getPhotoPath() != null && task.getPhotoPath() != null && !task.getPhotoPath().equals("")) {
-            Bitmap bitmap = BitmapFactory.decodeFile(task.getPhotoPath());
-            photo.setImageBitmap(bitmap);
-        } else {
-            photo.setOnClickListener(btn -> {
-                final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                    File file = createImageFile();
-                    Uri uri = FileProvider.getUriForFile(requireActivity(),
-                            "ru.nehodov.todolist.fileprovider",
-                            file);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
-            });
+        if (task == null) {
+            task = new Task("", "", "");
         }
 
+        if (task.getPhotoPath() != null && !task.getPhotoPath().equals("")) {
+            photo.setImageBitmap(BitmapFactory.decodeFile(task.getPhotoPath()));
+        } else {
+            photo.setOnClickListener(this::onPhotoSpaceClick);
+        }
 
         taskTittleEdit.setText(task.getName());
         taskDescriptionEdit.setText(task.getDesc());
         return view;
     }
 
+    public void onPhotoSpaceClick(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(requireActivity(), CAMERA_PERMISSION)
+                == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[]{CAMERA_PERMISSION}, PERMISSION_REQUEST_CODE);
+        } else {
+            callCameraIntent();
+        }
+    }
+
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(EXTRA_CURRENT_PHOTO_PATH, currentPhotoPath);
-        Log.d(TAG, currentPhotoPath + " currentPhotoPath is saved");
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            photo.callOnClick();
+        }
+    }
+
+    private void callCameraIntent() {
+        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            File file = TaskUtils.createImageFile(
+                    requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+            currentPhotoPath = file.getAbsolutePath();
+            Uri uri = FileProvider.getUriForFile(requireActivity(), FILE_PROVIDER_AUTHORITY, file);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     @Override
@@ -129,32 +149,25 @@ public class TaskEditorFragment extends Fragment {
         }
     }
 
-    private void setTaskPhoto() {
-        Log.d(TAG, "Into setTaskPhoto()");
-        File file = new File(currentPhotoPath);
-        Bitmap image;
-        try {
-            Uri photoUri = Uri.fromFile(file);
-            image = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), photoUri);
-            if (image != null) {
-                photo.setImageBitmap(image);
-                task.setPhotoPath(currentPhotoPath);
-                Log.d(TAG, currentPhotoPath + " set into the task. And now photoPath of the task is " + task.getPhotoPath());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXTRA_CURRENT_PHOTO_PATH, currentPhotoPath);
+        Log.d(TAG, currentPhotoPath + " currentPhotoPath is saved");
     }
 
-    private File createImageFile() {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp;
-        File storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = new File(storageDir + "/" + imageFileName + ".jpg");
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+    private void setTaskPhoto() {
+//        Log.d(TAG, "Into getPhotoBitmap()");
+        Bitmap image = TaskUtils.getPhotoBitmap(
+                requireActivity().getContentResolver(),
+                currentPhotoPath);
+        if (image != null) {
+            photo.setImageBitmap(image);
+            task.setPhotoPath(currentPhotoPath);
+//            Log.d(TAG, currentPhotoPath
+//                    + " set into the task. And now photoPath of the task is "
+//                    + task.getPhotoPath());
+        }
     }
 
     private void createTask() {

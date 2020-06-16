@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/task_editor_appbar"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -16,7 +15,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/show_info_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

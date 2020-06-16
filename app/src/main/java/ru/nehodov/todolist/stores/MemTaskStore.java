@@ -11,14 +11,13 @@ import ru.nehodov.todolist.utils.DateTimeFormatter;
 
 public class MemTaskStore implements IStore {
 
-    private static IStore INSTANCE;
+    private static IStore instance;
+    private static int id = 0;
 
     private final Map<Integer, Task> tasks = new LinkedHashMap<>();
 
-    private static int id = 0;
-
     private MemTaskStore() {
-        for (int i = 0; i < 12; i ++) {
+        for (int i = 0; i < 12; i++) {
             Task task = new Task("New Task " + i, "Description task " + i,
                     DateTimeFormatter.format(new Date()));
             task.setId(id++);
@@ -28,15 +27,15 @@ public class MemTaskStore implements IStore {
                     DateTimeFormatter.format(new Date()));
             closedTask.setId(id++);
             closedTask.doTask();
-            tasks.put(closedTask.getId() ,closedTask);
+            tasks.put(closedTask.getId(), closedTask);
         }
     }
 
     public static IStore getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new MemTaskStore();
+        if (instance == null) {
+            instance = new MemTaskStore();
         }
-        return INSTANCE;
+        return instance;
     }
 
     @Override
@@ -52,8 +51,7 @@ public class MemTaskStore implements IStore {
 
     @Override
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>(tasks.values());
-        return result;
+        return new ArrayList<>(tasks.values());
     }
 
     @Override

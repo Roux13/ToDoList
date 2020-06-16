@@ -12,11 +12,9 @@ import ru.nehodov.todolist.models.Task;
 
 public class SqlTaskStore implements IStore {
 
-    static final String TAG = SqlTaskStore.class.getSimpleName();
+    private static final String TAG = SqlTaskStore.class.getSimpleName();
 
-    private SQLiteDatabase db;
-
-    private static final String[] projection = {
+    private static final String[] PROJECTION = {
             TaskDbContract.TasksTable.COLUMN_NAME_ID,
             TaskDbContract.TasksTable.COLUMN_NAME_NAME,
             TaskDbContract.TasksTable.COLUMN_NAME_DESC,
@@ -24,6 +22,8 @@ public class SqlTaskStore implements IStore {
             TaskDbContract.TasksTable.COLUMN_NAME_DONE,
             TaskDbContract.TasksTable.COLUMN_NAME_PHOTO_PATH
     };
+
+    private final SQLiteDatabase db;
 
     public SqlTaskStore(SQLiteDatabase db) {
         this.db = db;
@@ -48,10 +48,10 @@ public class SqlTaskStore implements IStore {
     public Task getTask(int taskId) {
         Task task = null;
         try (Cursor cursor = db.query(TaskDbContract.TasksTable.TABLE_NAME,
-                projection,
+                PROJECTION,
                 TaskDbContract.TasksTable.COLUMN_NAME_ID + " = ?",
                 new String[]{String.valueOf(taskId)},
-                null, null, null)){
+                null, null, null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 task = makeTaskFromCursor(cursor);
@@ -66,7 +66,7 @@ public class SqlTaskStore implements IStore {
         ArrayList<Task> result = new ArrayList<>();
         try (Cursor cursor = db.query(TaskDbContract.TasksTable.TABLE_NAME,
                 null, null, null,
-                null, null, null)){
+                null, null, null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 result.add(makeTaskFromCursor(cursor));
@@ -96,7 +96,7 @@ public class SqlTaskStore implements IStore {
     public void deleteTask(int taskId) {
         db.delete(TaskDbContract.TasksTable.TABLE_NAME,
                 TaskDbContract.TasksTable.COLUMN_NAME_ID + " = ?",
-                new String[]{ String.valueOf(taskId)
+                new String[] {String.valueOf(taskId)
                 });
     }
 
@@ -109,11 +109,11 @@ public class SqlTaskStore implements IStore {
     @Override
     public List<Task> searchTasks(String query) {
         List<Task> result = new ArrayList<>();
-        try (Cursor cursor = db.query(TaskDbContract.TasksTable.TABLE_NAME, projection,
+        try (Cursor cursor = db.query(TaskDbContract.TasksTable.TABLE_NAME, PROJECTION,
                 TaskDbContract.TasksTable.COLUMN_NAME_NAME + " LIKE '%" + query + "%' OR "
                         + TaskDbContract.TasksTable.COLUMN_NAME_CREATED + " LIKE '%" + query + "%'",
                 null,
-                null, null, null)){
+                null, null, null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 result.add(makeTaskFromCursor(cursor));

@@ -9,7 +9,6 @@
     >
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/task_list_appbar"
 
         android:layout_height="wrap_content"
         android:layout_width="match_parent">

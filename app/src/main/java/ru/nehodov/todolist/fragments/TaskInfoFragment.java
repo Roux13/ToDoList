@@ -1,7 +1,6 @@
 package ru.nehodov.todolist.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
@@ -11,7 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,17 +20,14 @@ import android.widget.TextView;
 import ru.nehodov.todolist.R;
 import ru.nehodov.todolist.models.Task;
 
-public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialog.ConfirmDeleteTaskDialogListener {
+public class TaskInfoFragment extends Fragment
+        implements ConfirmDeleteTaskDialog.ConfirmDeleteTaskDialogListener {
 
-    static final String ARGUMENT_TASK = "ARGUMENT_TASK";
-    private static final String TAG = TaskInfoFragment.class.getSimpleName();
+    private static final String ARGUMENT_TASK = "ARGUMENT_TASK";
 
     private TaskInfoListener listener;
 
     private Task task;
-
-    public TaskInfoFragment() {
-    }
 
     public static Fragment getInstance(Task task) {
         Fragment fragment = new TaskInfoFragment();
@@ -68,12 +63,12 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
 
         task = (Task) requireArguments().getSerializable(ARGUMENT_TASK);
 
-        if (task.getPhotoPath() != null && task.getPhotoPath() != null && !task.getPhotoPath().equals("")) {
-            Log.d(TAG, "PhotoPath of the task is " + task.getPhotoPath());
-            Bitmap bitmap = BitmapFactory.decodeFile(task.getPhotoPath());
-            photo.setImageBitmap(bitmap);
-        } else {
-            Log.d(TAG, "PhotoPath of the task is empty");
+        if (task == null) {
+            task = new Task("", "", "");
+        }
+
+        if (task.getPhotoPath() != null && !task.getPhotoPath().equals("")) {
+            photo.setImageBitmap(BitmapFactory.decodeFile(task.getPhotoPath()));
         }
 
         tittleTv.setText(task.getName());
@@ -145,5 +140,6 @@ public class TaskInfoFragment extends Fragment implements ConfirmDeleteTaskDialo
     @Override
     public void onDetach() {
         super.onDetach();
+        this.listener = null;
     }
 }

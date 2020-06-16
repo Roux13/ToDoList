@@ -1,15 +1,15 @@
 # ToDoList
 
-The Android application stores the task in the list view. You can add new task, edit task, close task and view details.
+The Android application stores the task in the list view. You can add new task, edit task, close task and watch details.
 
 The app has three screens:
 
 * Task List:  
-![Image1 of ToDoListScreen1](/images/ToDoListScreen1.png)  
+![Image1 of ToDoListScreen1](/images/ToDoListTasks.png)  
 * Task info:  
-![Image2 of ToDoListScreen2](/images/ToDoListScreen2.png)  
+![Image2 of ToDoListScreen2](/images/ToDoListTaskInfo.png)  
 * Task editor:  
-![Image3 of ToDoListScreen3](/images/ToDoListScreen3.png)  
+![Image3 of ToDoListScreen3](/images/ToDoListTaskEditor.png)  
 
 ## Configuration
 

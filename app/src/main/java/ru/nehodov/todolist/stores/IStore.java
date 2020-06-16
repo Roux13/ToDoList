@@ -8,7 +8,6 @@ import ru.nehodov.todolist.models.Task;
 
 public interface IStore extends Serializable {
 
-
     void addTask(Task newTask);
 
     Task getTask(int taskId);

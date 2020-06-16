@@ -5,10 +5,8 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -31,21 +29,22 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = {21, 22, 23, 24, 25, 26, 27, 28})
 public class FileStoreTest {
 
     private Context context;
 
-    private String name = "Name";
-    private String desc = "Desc";
-    private String created = "01.01.2020";
-    private String doneDate = "15.01.2020";
+    private final String name = "Name";
+    private final String desc = "Desc";
+    private final String created = "01.01.2020";
+    private final String doneDate = "15.01.2020";
 
     @Before
     public void before() throws NoSuchFieldException, IllegalAccessException {
         context = InstrumentationRegistry.getInstrumentation().getContext();
-        Field instance = FileStore.class.getDeclaredField("INSTANCE");
+        Field instance = FileStore.class.getDeclaredField("instance");
         instance.setAccessible(true);
         instance.set(null, null);
     }
@@ -69,6 +68,7 @@ public class FileStoreTest {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     public void getTaskWhenFileExistsThenWeGetTheFile(){
         int taskId = 0;
@@ -93,6 +93,7 @@ public class FileStoreTest {
 
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     public void getTaskWhenGetThenCorrectContentOfTask(){
         int taskId = 0;
@@ -125,6 +126,7 @@ public class FileStoreTest {
         for (int taskId = 0; taskId < 5; taskId++) {
             File file = new File(context.getFilesDir(), taskId + ".txt");
             if (file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
             try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {

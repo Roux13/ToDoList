@@ -20,9 +20,9 @@ public class FileStore implements IStore {
 
     private static final String LOG_TAG_FILE_STORE = FileStore.class.getSimpleName();
 
-    private static FileStore INSTANCE;
+    private static FileStore instance;
     private int counter;
-    private Context context;
+    private final Context context;
 
     private FileStore(Context context) {
         this.context = context;
@@ -42,10 +42,10 @@ public class FileStore implements IStore {
     }
 
     public static FileStore getInstance(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = new FileStore(context);
+        if (instance == null) {
+            instance = new FileStore(context);
         }
-        return INSTANCE;
+        return instance;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class FileStore implements IStore {
 
         Task task = null;
         File file = new File(context.getFilesDir(), taskId + ".txt");
-        try (BufferedReader in = new BufferedReader(new FileReader(file))){
+        try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             int id = Integer.parseInt(in.readLine());
             String name = in.readLine();
             String desc = in.readLine();
@@ -103,6 +103,7 @@ public class FileStore implements IStore {
         return task;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void replaceTask(Task task, int taskId) {
         Log.d(LOG_TAG_FILE_STORE, "Into replaceTask()");
@@ -122,6 +123,7 @@ public class FileStore implements IStore {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void deleteTask(int taskId) {
         Log.d(LOG_TAG_FILE_STORE, "Into deleteTask()");
@@ -132,6 +134,7 @@ public class FileStore implements IStore {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void deleteAll() {
         Log.d(LOG_TAG_FILE_STORE, "Into deleteAll()");

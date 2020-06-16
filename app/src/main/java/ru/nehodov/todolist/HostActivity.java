@@ -12,20 +12,17 @@ import ru.nehodov.todolist.fragments.TaskEditorFragment;
 import ru.nehodov.todolist.fragments.TaskInfoFragment;
 import ru.nehodov.todolist.fragments.TaskListFragment;
 import ru.nehodov.todolist.models.Task;
-import ru.nehodov.todolist.stores.FileStore;
 import ru.nehodov.todolist.stores.IStore;
-import ru.nehodov.todolist.stores.MemTaskStore;
 import ru.nehodov.todolist.stores.SqlTaskStore;
 import ru.nehodov.todolist.stores.TaskDbHelper;
 
 public class HostActivity extends AppCompatActivity implements TaskListFragment.TaskListListener,
         TaskEditorFragment.TaskEditorListener, TaskInfoFragment.TaskInfoListener {
 
-
     private TaskDbHelper dbHelper;
     private IStore taskStore;
 
-    private FragmentManager fm = getSupportFragmentManager();
+    private final FragmentManager fm = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +72,6 @@ public class HostActivity extends AppCompatActivity implements TaskListFragment.
         callTaskList();
     }
 
-    @Override
     public void doTask(Task task) {
         task.doTask();
         taskStore.replaceTask(task, task.getId());

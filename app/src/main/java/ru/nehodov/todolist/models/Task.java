@@ -11,7 +11,7 @@ public class Task implements Serializable {
     private int id;
     private String name;
     private String desc;
-    private String created;
+    private final String created;
     private String done;
     private String photoPath;
 
@@ -32,16 +32,16 @@ public class Task implements Serializable {
         this.photoPath = "";
     }
 
+    public Task(String name, String desc, String created) {
+        this(name, desc, created, "");
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Task(String name, String desc, String created) {
-        this(name, desc, created, "");
     }
 
     public void setName(String name) {
@@ -82,15 +82,19 @@ public class Task implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Task task = (Task) o;
-        return id == task.id &&
-                Objects.equals(name, task.name) &&
-                Objects.equals(desc, task.desc) &&
-                Objects.equals(created, task.created) &&
-                Objects.equals(done, task.done) &&
-                Objects.equals(photoPath, task.photoPath);
+        return id == task.id
+                && Objects.equals(name, task.name)
+                && Objects.equals(desc, task.desc)
+                && Objects.equals(created, task.created)
+                && Objects.equals(done, task.done)
+                && Objects.equals(photoPath, task.photoPath);
     }
 
     @Override

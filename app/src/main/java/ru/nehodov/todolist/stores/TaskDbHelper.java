@@ -17,7 +17,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TaskDbContract.TasksTable.TABLE_NAME + "("
+        db.execSQL("CREATE TABLE " + TaskDbContract.TasksTable.TABLE_NAME + " ("
                 + TaskDbContract.TasksTable.COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TaskDbContract.TasksTable.COLUMN_NAME_NAME + " TEXT, "
                 + TaskDbContract.TasksTable.COLUMN_NAME_DESC + " TEXT, "
