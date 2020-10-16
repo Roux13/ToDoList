@@ -11,13 +11,5 @@ The app has three screens:
 * Task editor:  
 ![Image3 of ToDoListScreen3](/images/ToDoListTaskEditor.png)  
 
-## Configuration
-
-Anything...
-
-## Usage
-
-Anything...
-
 ## Contacts
  Skype: roux13333
